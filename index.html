@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Desktop UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', 'Tahoma', sans-serif;
+            font-size: 14px;
+            user-select: none;
+            background-color: #1a1a1a;
+        }
+        .desktop {
+            background-image: url('https://placehold.co/1920x1080/0078D4/FFFFFF?text=Welcome');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+            overflow: hidden;
+        }
+        .taskbar {
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 48px;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .start-button {
+            background: transparent;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .start-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .icon {
+            width: 90px;
+            height: 90px;
+            text-align: center;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+            cursor: pointer;
+            padding: 8px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .icon p { word-break: break-word; }
+        .icon:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            outline: none;
+        }
+        .icon svg, .folder-icon svg {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 4px auto;
+        }
+        .window {
+            position: absolute;
+            background: rgba(243, 243, 243, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            border-radius: 8px;
+            resize: both;
+            overflow: hidden;
+            min-width: 350px;
+            min-height: 250px;
+            transition: box-shadow 0.2s;
+        }
+        .window.active {
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+        }
+        .title-bar {
+            background: rgba(229, 229, 229, 0.8);
+            color: #1a1a1a;
+            padding: 4px 4px 4px 12px;
+            font-weight: 600;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        .window.active .title-bar {
+             background: rgba(255, 255, 255, 0.85);
+        }
+        .title-bar-buttons button {
+            width: 40px;
+            height: 32px;
+            background: transparent;
+            border: none;
+            color: #333;
+            font-weight: normal;
+            font-size: 16px;
+            line-height: 32px;
+            text-align: center;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .title-bar-buttons button:hover { background: rgba(0,0,0,0.1); }
+        .title-bar-buttons button.close-btn:hover { background: #e81123; color: white; }
+        .window-body { flex-grow: 1; padding: 10px; background: transparent; overflow-y: auto; }
+        .folder-container { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 10px; }
+        .folder-icon {
+            width: 85px;
+            min-height: 85px;
+            text-align: center;
+            color: #333;
+            cursor: pointer;
+            padding: 8px 4px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .folder-icon p { font-size: 12px; line-height: 1.3; word-break: break-word; }
+        .folder-icon:hover { background: rgba(0, 120, 215, 0.1); }
+        .folder-icon:focus { background: rgba(0, 120, 215, 0.2); border: 1px solid rgba(0, 120, 215, 0.5); outline: none; }
+        .toolbar { background: rgba(255,255,255,0.5); padding: 4px 6px; border-bottom: 1px solid rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; }
+        .toolbar button { background: transparent; border: 1px solid transparent; padding: 4px 8px; border-radius: 4px; display: flex; align-items: center; gap: 4px; }
+        .toolbar button:hover { background: rgba(0,0,0,0.1); }
+        .address-bar { flex-grow: 1; background: white; border-radius: 4px; padding: 4px 8px; border: 1px solid #ccc; font-size: 12px; }
+        .text-viewer-body { font-family: 'Consolas', 'Courier New', monospace; white-space: pre-wrap; padding: 15px; font-size: 13px; color: #1a1a1a; }
+        .start-menu {
+            position: absolute;
+            bottom: 56px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 600px;
+            background: rgba(243, 243, 243, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 20px;
+            color: #1a1a1a;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .start-menu.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(-50%) translateY(10px);
+        }
+        .start-menu-item {
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .start-menu-item:hover {
+            background: rgba(0, 120, 215, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="desktop" class="desktop">
+        <div id="documentsIcon" class="icon absolute top-8 left-8" tabindex="0">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="#4285F4" viewBox="0 0 48 48"><path d="M40 8H24l-4-4H8c-2.21 0-3.98 1.79-3.98 4L4 36c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4z"/></svg>
+            <p>Documents</p>
+        </div>
+    </div>
+
+    <!-- Folder Window Template -->
+    <div id="folderWindow" class="window hidden" style="top: 100px; left: 150px; width: 720px; height: 500px;">
+        <div class="title-bar" id="folderWindowTitleBar">
+            <span id="folderWindowTitle">Documents</span>
+            <div class="title-bar-buttons">
+                <button>_</button>
+                <button>&#9633;</button>
+                <button id="closeFolderButton" class="close-btn">✕</button>
+            </div>
+        </div>
+        <div class="toolbar">
+            <button id="backButton">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+            </button>
+            <div id="addressBar" class="address-bar"></div>
+        </div>
+        <div id="folderWindowBody" class="window-body folder-container"></div>
+    </div>
+
+    <!-- Text Viewer Window Template -->
+    <div id="textViewerWindow" class="window hidden" style="top: 200px; left: 250px; width: 600px; height: 400px;">
+        <div class="title-bar" id="textViewerTitleBar">
+            <span id="textViewerTitle">Notepad</span>
+            <div class="title-bar-buttons">
+                <button>_</button>
+                <button>&#9633;</button>
+                <button id="closeTextViewerButton" class="close-btn">✕</button>
+            </div>
+        </div>
+        <div id="textViewerBody" class="window-body text-viewer-body"></div>
+    </div>
+    
+    <!-- Start Menu Template -->
+    <div id="startMenu" class="start-menu hidden">
+        <h2 class="text-xl font-semibold mb-4">Pinned</h2>
+         <div class="start-menu-item">Settings</div>
+         <div class="start-menu-item">Power</div>
+         <div class="start-menu-item">File Explorer</div>
+    </div>
+
+    <div class="taskbar">
+        <button id="startButton" class="start-button">
+            <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 6H22V22H6V6Z" fill="#0078D4"></path><path d="M26 6H42V22H26V6Z" fill="#0078D4"></path><path d="M6 26H22V42H6V26Z" fill="#0078D4"></path><path d="M26 26H42V42H26V26Z" fill="#0078D4"></path>
+            </svg>
+        </button>
+        <div class="flex-grow"></div>
+        <div id="clock" class="text-white px-4 text-sm"></div>
+    </div>
+
+    <script>
+        const fileSystem = {
+            'Documents': { type: 'folder', children: {
+                'Photos': { type: 'folder', children: {
+                    'Summer Vacation 2024': { type: 'folder', children: {} },
+                    'Holidays': { type: 'folder', children: {} }
+                }},
+                'Music': { type: 'folder', children: {}},
+                'Work Projects': { type: 'folder', children: {
+                    'Project Phoenix': { type: 'folder', children: {} },
+                }},
+                'notes.txt': { type: 'file', content: 'This is a sample text file.' },
+                'readme.txt': { type: 'file', content: 'Project "Modern Desktop" Readme' }
+            }}
+        };
+
+        const desktop = document.getElementById('desktop');
+        const documentsIcon = document.getElementById('documentsIcon');
+        const folderWindow = document.getElementById('folderWindow');
+        const folderWindowTitleBar = document.getElementById('folderWindowTitleBar');
+        const folderWindowTitle = document.getElementById('folderWindowTitle');
+        const folderWindowBody = document.getElementById('folderWindowBody');
+        const closeFolderButton = document.getElementById('closeFolderButton');
+        const backButton = document.getElementById('backButton');
+        const addressBar = document.getElementById('addressBar');
+        const textViewerWindow = document.getElementById('textViewerWindow');
+        const textViewerTitleBar = document.getElementById('textViewerTitleBar');
+        const textViewerTitle = document.getElementById('textViewerTitle');
+        const textViewerBody = document.getElementById('textViewerBody');
+        const closeTextViewerButton = document.getElementById('closeTextViewerButton');
+        const clock = document.getElementById('clock');
+        const startButton = document.getElementById('startButton');
+        const startMenu = document.getElementById('startMenu');
+        const allWindows = document.querySelectorAll('.window');
+
+        let currentPath = [];
+        let historyStack = [];
+
+        const folderSVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="#4285F4" viewBox="0 0 48 48"><path d="M40 8H24l-4-4H8c-2.21 0-3.98 1.79-3.98 4L4 36c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4z"/></svg>`;
+        const fileSVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="#FFFFFF" viewBox="0 0 48 48"><path d="M38 6H10c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4V14l-8-8z" fill="#90a4ae"/><path d="M28 6v10h10L28 6z" fill="#cfd8dc"/><path d="M38 42H10c-2.21 0-4-1.79-4-4V10c0-2.21 1.79-4 4-4h18" fill="#fff"/><path d="M18 22h12v2H18zm0 6h12v2H18zm0 6h8v2h-8z" fill="#7f8c8d"/></svg>`;
+
+        function updateClock() {
+            clock.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function renderFolderContents(pathArray) {
+            let currentLevel = fileSystem;
+            for (const folderName of pathArray) {
+                currentLevel = currentLevel[folderName]?.children;
+                if (!currentLevel) { console.error("Path not found:", pathArray.join('/')); return; }
+            }
+            
+            folderWindowBody.innerHTML = '';
+            Object.entries(currentLevel).forEach(([name, item]) => {
+                const iconDiv = document.createElement('div');
+                iconDiv.className = 'folder-icon';
+                iconDiv.tabIndex = 0;
+                iconDiv.innerHTML = item.type === 'folder' ? folderSVG : fileSVG;
+                const iconName = document.createElement('p');
+                iconName.textContent = name;
+                iconDiv.appendChild(iconName);
+                
+                if (item.type === 'folder') {
+                    iconDiv.addEventListener('dblclick', () => {
+                        historyStack.push([...currentPath]);
+                        currentPath.push(name);
+                        renderFolderContents(currentPath);
+                    });
+                } else if (item.type === 'file' && name.endsWith('.txt')) {
+                    iconDiv.addEventListener('dblclick', () => openTextViewer(name, item.content));
+                }
+                folderWindowBody.appendChild(iconDiv);
+            });
+            updateWindowTitleAndAddress();
+        }
+
+        function updateWindowTitleAndAddress() {
+            const title = currentPath.length > 0 ? currentPath[currentPath.length - 1] : 'Desktop';
+            folderWindowTitle.textContent = title;
+            addressBar.textContent = currentPath.join(' > ');
+        }
+        
+        function setActiveWindow(activeWindow) {
+            allWindows.forEach(win => {
+                win.classList.remove('active');
+                win.style.zIndex = 10;
+            });
+            if (activeWindow) {
+                activeWindow.classList.add('active');
+                activeWindow.style.zIndex = 20;
+            }
+        }
+
+        function openFolderWindow() {
+            folderWindow.classList.remove('hidden');
+            currentPath = ['Documents'];
+            historyStack = [];
+            renderFolderContents(currentPath);
+            setActiveWindow(folderWindow);
+        }
+
+        function closeFolderWindow() { folderWindow.classList.add('hidden'); }
+
+        function openTextViewer(fileName, content) {
+            textViewerTitle.textContent = fileName + " - Notepad";
+            textViewerBody.textContent = content;
+            textViewerWindow.classList.remove('hidden');
+            setActiveWindow(textViewerWindow);
+        }
+
+        function closeTextViewer() { textViewerWindow.classList.add('hidden'); }
+
+        function goBack() {
+            if (historyStack.length > 0) {
+                currentPath = historyStack.pop();
+                renderFolderContents(currentPath);
+            }
+        }
+        
+        function makeDraggable(windowEl, titleBarEl) {
+            let isDragging = false, offsetX, offsetY;
+            const dragStart = (e) => {
+                if (e.target.tagName === 'BUTTON') return;
+                isDragging = true;
+                const event = e.type === 'touchstart' ? e.touches[0] : e;
+                offsetX = event.clientX - windowEl.offsetLeft;
+                offsetY = event.clientY - windowEl.offsetTop;
+                document.body.style.cursor = 'move';
+                setActiveWindow(windowEl);
+            };
+            const dragMove = (e) => {
+                if (isDragging) {
+                    const event = e.type === 'touchmove' ? e.touches[0] : e;
+                    let newX = event.clientX - offsetX;
+                    let newY = event.clientY - offsetY;
+                    const desktopRect = desktop.getBoundingClientRect();
+                    newX = Math.max(0, Math.min(newX, desktopRect.width - windowEl.offsetWidth));
+                    newY = Math.max(0, Math.min(newY, desktopRect.height - windowEl.offsetHeight));
+                    windowEl.style.left = `${newX}px`;
+                    windowEl.style.top = `${newY}px`;
+                }
+            };
+            const dragEnd = () => {
+                isDragging = false;
+                document.body.style.cursor = 'default';
+            };
+            titleBarEl.addEventListener('mousedown', dragStart);
+            document.addEventListener('mousemove', dragMove);
+            document.addEventListener('mouseup', dragEnd);
+            titleBarEl.addEventListener('touchstart', dragStart);
+            document.addEventListener('touchmove', dragMove);
+            document.addEventListener('touchend', dragEnd);
+            windowEl.addEventListener('mousedown', () => setActiveWindow(windowEl));
+        }
+
+        documentsIcon.addEventListener('dblclick', openFolderWindow);
+        closeFolderButton.addEventListener('click', closeFolderWindow);
+        closeTextViewerButton.addEventListener('click', closeTextViewer);
+        backButton.addEventListener('click', goBack);
+        
+        startButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            startMenu.classList.toggle('hidden');
+        });
+        
+        desktop.addEventListener('click', () => {
+            if (!startMenu.classList.contains('hidden')) {
+                startMenu.classList.add('hidden');
+            }
+        });
+
+        updateClock();
+        setInterval(updateClock, 1000);
+        makeDraggable(folderWindow, folderWindowTitleBar);
+        makeDraggable(textViewerWindow, textViewerTitleBar);
+    </script>
+
+</body>
+</html>
