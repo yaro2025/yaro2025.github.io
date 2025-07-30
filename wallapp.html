@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>viem v2 Production Wallet</title>
+    <!-- NOTE: All JS dependencies are now loaded as modules in the script tag -->
+    <style>
+        :root {
+            --bg-color: #1C1C1E;
+            --surface-color: rgba(28, 28, 30, 0.75);
+            --surface-border: rgba(255, 255, 255, 0.15);
+            --inset-surface-color: rgba(0, 0, 0, 0.3);
+            --primary-color: #0A84FF;
+            --primary-hover: #3b9bff;
+            --secondary-color: rgba(118, 118, 128, 0.24);
+            --secondary-hover: rgba(118, 118, 128, 0.4);
+            --text-primary: #FFFFFF;
+            --text-secondary: #AEAEB2;
+            --error-color: #FF453A;
+            --success-color: #32D74B;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Text", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes modalContentFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -468px 0;
+            }
+
+            100% {
+                background-position: 468px 0;
+            }
+        }
+
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px;
+            padding: 1.5rem;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: var(--surface-color);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 28px;
+            padding: 2rem;
+            border: 1px solid var(--surface-border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease-out forwards;
+            position: relative;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+            margin: 0 0 1.5rem 0;
+            font-size: 1.7rem;
+            font-weight: 600;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding-left: 0.2rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--inset-surface-color);
+            border: 1px solid transparent;
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            box-sizing: border-box;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3.5px rgba(10, 132, 255, 0.3);
+        }
+
+        .button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .button-primary {
+            background-color: var(--primary-color);
+        }
+
+        .button-primary:hover:not(:disabled) {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .button-secondary {
+            background-color: var(--secondary-color);
+        }
+
+        .button-secondary:hover:not(:disabled) {
+            background-color: var(--secondary-hover);
+        }
+
+        .button-link {
+            background: none;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            padding: 0.5rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .balance-display {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            min-height: 70px;
+        }
+
+        .balance-eth {
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .balance-usd {
+            color: var(--text-secondary);
+            font-size: 1.25rem;
+        }
+
+        .address-display,
+        .summary-item {
+            font-family: monospace;
+            background-color: var(--inset-surface-color);
+            padding: 1rem;
+            border-radius: 14px;
+            word-break: break-all;
+            text-align: center;
+            font-size: 1rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+
+        .address-display:hover {
+            border-color: var(--surface-border);
+        }
+
+        .summary-item {
+            cursor: default;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .summary-label {
+            color: var(--text-secondary);
+            font-family: var(--font-family);
+        }
+
+        .summary-value {
+            color: var(--text-primary);
+            text-align: right;
+        }
+
+        .summary-value-sub {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .shimmer {
+            animation: shimmer 1.5s infinite linear;
+            background: linear-gradient(to right,
+                    var(--inset-surface-color) 4%,
+                    rgba(255, 255, 255, 0.05) 25%,
+                    var(--inset-surface-color) 36%);
+            background-size: 1000px 100%;
+            border-radius: 8px;
+            height: 20px;
+            width: 120px;
+        }
+
+        .amount-input-wrapper {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .max-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--secondary-color);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 8px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Improved Checkbox Style */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+
+        .checkbox-wrapper .label {
+            margin: 0;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        #remember-me {
+            -webkit-appearance: none;
+            appearance: none;
+            background-color: var(--inset-surface-color);
+            margin: 0;
+            font: inherit;
+            color: currentColor;
+            width: 1.15em;
+            height: 1.15em;
+            border: 1px solid var(--surface-border);
+            border-radius: 0.35em;
+            transform: translateY(-0.075em);
+            display: grid;
+            place-content: center;
+            cursor: pointer;
+        }
+
+        #remember-me::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em var(--primary-color);
+            border-radius: 0.15em;
+        }
+
+        #remember-me:checked::before {
+            transform: scale(1);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: modalFadeIn 0.3s;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 28px;
+            text-align: center;
+            border: 1px solid var(--surface-border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 360px;
+            animation: modalContentFadeIn 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1rem;
+        }
+
+        .modal-content p {
+            color: var(--text-secondary);
+            margin-top: -0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+
+        #qr-code {
+            margin: 1.5rem auto;
+            background: white;
+            padding: 1rem;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: fit-content;
+        }
+
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .toast {
+            padding: 12px 20px;
+            border-radius: 14px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s forwards, fadeIn 0.3s 2.7s reverse forwards;
+        }
+
+        .toast.success {
+            background-color: var(--success-color);
+        }
+
+        .toast.error {
+            background-color: var(--error-color);
+        }
+
+        .toast.info {
+            background-color: var(--secondary-hover);
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-left-color: var(--text-primary);
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Improved Confirm View */
+        .confirm-card .summary-item:last-of-type {
+            margin-bottom: 1.5rem;
+        }
+
+        #gas-fee-container {
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            background-color: transparent;
+            border: none;
+            margin-bottom: 0;
+        }
+
+        .confirm-total-container {
+            padding-top: 1rem;
+            border-top: 1px solid var(--surface-border);
+        }
+
+        .confirm-total-container .summary-item {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+
+        .confirm-total-container .summary-value {
+            font-size: 1.2rem;
+        }
+
+        .confirm-total-container .summary-value-sub {
+            font-size: 0.9rem;
+        }
+
+        /* Chain Selector */
+        .chain-selector {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+        }
+
+        .chain-selector-btn {
+            background: var(--inset-surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            padding: 0.5rem 0.8rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.2s;
+        }
+
+        .chain-selector-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .chain-selector-btn .chevron {
+            width: 8px;
+            height: 8px;
+            border-style: solid;
+            border-color: var(--text-secondary);
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            transition: transform 0.2s;
+        }
+
+        .chain-selector-btn.open .chevron {
+            transform: rotate(-135deg);
+        }
+
+        .chain-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: 14px;
+            list-style: none;
+            padding: 0.5rem;
+            z-index: 10;
+            width: 150px;
+        }
+
+        .chain-option {
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .chain-option:hover {
+            background: var(--primary-color);
+        }
+
+        .chain-option.active {
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="toast-container"></div>
+
+    <div class="container">
+        <!-- View 1: Initial Unlock with Private Key -->
+        <div id="pk-unlock-view" class="hidden">
+            <div class="card">
+                <form id="pk-unlock-form">
+                    <h1>Secure Wallet</h1>
+                    <label for="private-key" class="label">Enter Private Key</label>
+                    <input type="password" id="private-key" class="input-field" placeholder="0x..." autocomplete="off">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="remember-me">
+                        <label for="remember-me" class="label">Remember me</label>
+                    </div>
+                    <button type="submit" class="button button-primary" style="margin-top: 1rem;">Unlock</button>
+                    <button type="button" id="use-saved-wallet-btn" class="button button-link hidden">Use saved
+                        wallet</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- View 2: Unlock with Password for Saved Wallet -->
+        <div id="password-unlock-view" class="hidden">
+            <div class="card">
+                <form id="password-unlock-form">
+                    <h1>Welcome Back</h1>
+                    <p
+                        style="text-align:center; color: var(--text-secondary); margin-top:-1rem; margin-bottom: 1.5rem;">
+                        Unlock wallet for:</p>
+                    <div id="saved-address-display" class="address-display" style="cursor:default;"></div>
+                    <label for="password" class="label">Enter Password</label>
+                    <input type="password" id="password" class="input-field" autocomplete="current-password">
+                    <button type="submit" class="button button-primary">Unlock</button>
+                    <button type="button" id="forget-wallet-btn" class="button button-link">Forget this wallet</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Wallet View -->
+        <div id="wallet-view" class="hidden">
+            <div class="card">
+                <div class="chain-selector">
+                    <button id="chain-selector-btn" class="chain-selector-btn">
+                        <span id="chain-selector-current-name">Ethereum</span>
+                        <div class="chevron"></div>
+                    </button>
+                    <ul id="chain-dropdown" class="chain-dropdown hidden"></ul>
+                </div>
+                <h1 style="margin-bottom: 2rem;"></h1>
+                <div id="balance-container" class="balance-display"></div>
+                <div id="address-container" class="address-display" title="Click to copy"></div>
+                <div class="button-group">
+                    <button id="receive-button" class="button button-secondary">Receive</button>
+                    <button id="send-view-button" class="button button-primary">Send</button>
+                </div>
+                <button id="lock-button" class="button button-secondary" style="margin-top: 1rem;">Lock</button>
+            </div>
+        </div>
+
+        <!-- Send View -->
+        <div id="send-view" class="hidden">
+            <div class="card">
+                <h2 id="send-view-title">Send ETH</h2>
+                <label for="recipient-address" class="label">Recipient</label>
+                <input type="text" id="recipient-address" class="input-field" placeholder="0x...">
+                <label for="send-amount" class="label">Amount</label>
+                <div class="amount-input-wrapper">
+                    <input type="text" id="send-amount" class="input-field" placeholder="0.0" style="margin-bottom:0;">
+                    <button id="max-button" class="max-button">MAX</button>
+                </div>
+                <div id="gas-fee-container" class="summary-item hidden">
+                </div>
+                <div class="button-group">
+                    <button id="back-to-wallet-btn" class="button button-secondary">Back</button>
+                    <button id="prepare-send-btn" class="button button-primary">Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirm Transaction View -->
+        <div id="confirm-view" class="hidden">
+            <div class="card confirm-card">
+                <h2>Confirm</h2>
+                <div class="summary-item">
+                    <span class="summary-label">To</span>
+                    <span id="confirm-recipient" class="summary-value" style="max-width: 60%;"></span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Amount</span>
+                    <span id="confirm-amount" class="summary-value"></span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Network Fee</span>
+                    <span id="confirm-fee" class="summary-value"></span>
+                </div>
+
+                <div class="confirm-total-container">
+                    <div class="summary-item">
+                        <span class="summary-label">Total</span>
+                        <span id="confirm-total" class="summary-value"></span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="cancel-send-btn" class="button button-secondary">Cancel</button>
+                    <button id="confirm-send-btn" class="button button-primary">Confirm & Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receive Modal -->
+    <div id="receive-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Your Address</h2>
+            <div id="qr-code"></div>
+            <div id="receive-address" class="address-display" title="Click to copy"></div>
+            <button id="close-modal-button" class="button button-primary">Close</button>
+        </div>
+    </div>
+
+    <!-- Custom Password Prompt Modal -->
+    <div id="password-prompt-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="password-prompt-title">Create Password</h2>
+            <p>This password encrypts your private key for this device. It is not recoverable.</p>
+            <form id="password-prompt-form">
+                <input type="password" id="password-prompt-input" class="input-field" autocomplete="new-password">
+                <div class="button-group">
+                    <button type="button" id="password-prompt-cancel-btn"
+                        class="button button-secondary">Cancel</button>
+                    <button type="submit" id="password-prompt-confirm-btn" class="button button-primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script type="module">
+        import { createPublicClient, createWalletClient, http, formatEther, parseEther, isAddress, BaseError } from 'https://esm.sh/viem';
+        import { privateKeyToAccount } from 'https://esm.sh/viem/accounts';
+        import { mainnet, base, polygon, bsc } from 'https://esm.sh/viem/chains';
+        import QRCode from 'https://esm.sh/qrcode';
+
+        // --- STATE & CONFIG ---
+        let account, publicClient, walletClient;
+        let nativePrice = 0;
+        let currentGasEstimate = { fee: 0n, gas: 0n, gasPrice: 0n, feeUsd: '0.00' };
+        let transactionDetails = {};
+
+        const chains = {
+            [mainnet.id]: { object: mainnet, name: 'Ethereum', symbol: 'ETH', priceId: 'ethereum' },
+            [base.id]: { object: base, name: 'Base', symbol: 'ETH', priceId: 'ethereum' },
+            [polygon.id]: { object: polygon, name: 'Polygon', symbol: 'MATIC', priceId: 'matic-network' },
+            [bsc.id]: { object: bsc, name: 'BNB Chain', symbol: 'BNB', priceId: 'binancecoin' },
+        };
+        let currentChain = mainnet;
+
+        // --- UI ELEMENTS ---
+        const allViews = {
+            pkUnlock: document.getElementById('pk-unlock-view'),
+            passwordUnlock: document.getElementById('password-unlock-view'),
+            wallet: document.getElementById('wallet-view'),
+            send: document.getElementById('send-view'),
+            confirm: document.getElementById('confirm-view'),
+        };
+        const receiveModal = document.getElementById('receive-modal');
+        const passwordPromptModal = document.getElementById('password-prompt-modal');
+        const gasFeeContainer = document.getElementById('gas-fee-container');
+        const chainDropdown = document.getElementById('chain-dropdown');
+
+        // --- HELPER FUNCTIONS ---
+        const sanitizePrivateKey = (pk) => pk.startsWith('0x') ? pk : `0x${pk}`;
+        const formatEthValue = (val, places = 5) => {
+            const formatted = formatEther(val);
+            const [integer, decimal] = formatted.split('.');
+            if (!decimal) return integer;
+            return `${integer}.${decimal.slice(0, places)}`;
+        }
+
+        // --- UI FUNCTIONS ---
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        function showSpinner(element) { element.innerHTML = '<div class="spinner" style="margin: auto;"></div>'; }
+        function showView(viewName) {
+            Object.values(allViews).forEach(v => v.classList.add('hidden'));
+            allViews[viewName].classList.remove('hidden');
+        }
+        function copyToClipboard(element, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = element.textContent;
+                if (originalText === "Copied!") return;
+                element.textContent = "Copied!";
+                showToast('Address copied!');
+                setTimeout(() => { element.textContent = originalText; }, 1500);
+            }).catch(() => showToast('Failed to copy address.', 'error'));
+        }
+
+        // --- CUSTOM PASSWORD PROMPT ---
+        function promptForPassword() {
+            return new Promise((resolve, reject) => {
+                const form = document.getElementById('password-prompt-form');
+                const input = document.getElementById('password-prompt-input');
+                const confirmBtn = document.getElementById('password-prompt-confirm-btn');
+                const cancelBtn = document.getElementById('password-prompt-cancel-btn');
+
+                input.value = '';
+                passwordPromptModal.classList.remove('hidden');
+                input.focus();
+
+                const onConfirm = (e) => {
+                    e.preventDefault();
+                    if (input.value.length < 8) {
+                        showToast("Password must be at least 8 characters.", "error");
+                        return;
+                    }
+                    cleanup();
+                    resolve(input.value);
+                };
+
+                const onCancel = () => {
+                    cleanup();
+                    reject(new Error('Password prompt cancelled'));
+                };
+
+                const cleanup = () => {
+                    passwordPromptModal.classList.add('hidden');
+                    form.removeEventListener('submit', onConfirm);
+                    cancelBtn.removeEventListener('click', onCancel);
+                };
+
+                form.addEventListener('submit', onConfirm);
+                cancelBtn.addEventListener('click', onCancel);
+            });
+        }
+
+
+        // --- CRYPTO & LOCAL STORAGE (for "Remember me") ---
+        const storageKey = 'viem_wallet_encrypted_pk';
+        async function encryptAndSaveKey(pk, password) {
+            try {
+                const cleanPk = sanitizePrivateKey(pk);
+                const tempAccount = privateKeyToAccount(cleanPk);
+
+                const salt = crypto.getRandomValues(new Uint8Array(16));
+                const iv = crypto.getRandomValues(new Uint8Array(12));
+                const keyMaterial = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+                const cryptoKey = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' }, keyMaterial, { name: 'AES-GCM', length: 256 }, true, ['encrypt']);
+                const encryptedPk = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, cryptoKey, new TextEncoder().encode(cleanPk));
+
+                const savedData = {
+                    encryptedPk: btoa(String.fromCharCode(...new Uint8Array(encryptedPk))),
+                    salt: btoa(String.fromCharCode(...salt)),
+                    iv: btoa(String.fromCharCode(...iv)),
+                    address: tempAccount.address
+                };
+                localStorage.setItem(storageKey, JSON.stringify(savedData));
+                return true;
+            } catch (e) { console.error("Encryption failed:", e); return false; }
+        }
+
+        async function loadAndDecryptKey(password) {
+            const savedData = JSON.parse(localStorage.getItem(storageKey));
+            if (!savedData) return null;
+            try {
+                const salt = new Uint8Array(atob(savedData.salt).split('').map(c => c.charCodeAt(0)));
+                const iv = new Uint8Array(atob(savedData.iv).split('').map(c => c.charCodeAt(0)));
+                const encryptedPk = new Uint8Array(atob(savedData.encryptedPk).split('').map(c => c.charCodeAt(0)));
+
+                const keyMaterial = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+                const cryptoKey = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' }, keyMaterial, { name: 'AES-GCM', length: 256 }, true, ['decrypt']);
+                const decryptedPk = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, cryptoKey, encryptedPk);
+
+                return new TextDecoder().decode(decryptedPk);
+            } catch (e) { console.error("Decryption failed:", e); return null; }
+        }
+
+        // --- MODAL LOGIC ---
+        function showReceiveModal() {
+            if (!account) return;
+            const qrCodeContainer = document.getElementById('qr-code');
+            qrCodeContainer.innerHTML = '';
+            QRCode.toCanvas(document.createElement('canvas'), account.address, { width: 220, margin: 1 }, (error, canvas) => {
+                if (error) {
+                    console.error(error);
+                    qrCodeContainer.textContent = 'Could not generate QR code.';
+                    return;
+                }
+                qrCodeContainer.appendChild(canvas);
+            });
+            document.getElementById('receive-address').textContent = account.address;
+            receiveModal.classList.remove('hidden');
+            document.addEventListener('keydown', handleEscKey);
+        }
+
+        function hideReceiveModal() {
+            receiveModal.classList.add('hidden');
+            document.removeEventListener('keydown', handleEscKey);
+        }
+        function handleEscKey(event) { if (event.key === 'Escape') hideReceiveModal(); }
+
+        // --- CORE WALLET LOGIC ---
+        async function fetchNativeCurrencyPrice() {
+            const chainInfo = chains[currentChain.id];
+            if (!chainInfo) { nativePrice = 0; return; }
+
+            const apiUrl = `https://api.coingecko.com/api/v3/simple/price?ids=${chainInfo.priceId}&vs_currencies=usd`;
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error('Price fetch failed');
+                const priceData = await response.json();
+                nativePrice = priceData[chainInfo.priceId]?.usd ?? 0;
+            } catch (e) { console.error(e); nativePrice = 0; }
+        }
+
+        async function updateBalance() {
+            if (!account || !publicClient) return;
+            const balanceContainer = document.getElementById('balance-container');
+            showSpinner(balanceContainer);
+            try {
+                const balance = await publicClient.getBalance({ address: account.address });
+                account.balance = balance;
+                const balanceInNative = formatEther(balance);
+                const nativeDisplay = `${parseFloat(balanceInNative).toFixed(5)} ${chains[currentChain.id].symbol}`;
+                const usdDisplay = nativePrice > 0 ? `~ $${(parseFloat(balanceInNative) * nativePrice).toFixed(2)} USD` : '';
+                balanceContainer.innerHTML = `<div class="balance-eth">${nativeDisplay}</div><div class="balance-usd">${usdDisplay}</div>`;
+            } catch (e) {
+                console.error(e);
+                balanceContainer.innerHTML = '<div style="color: var(--error-color);">Could not load balance</div>';
+            }
+        }
+
+        function updateChainUI(chainId) {
+            const chainInfo = chains[chainId];
+            if (!chainInfo) return;
+
+            document.getElementById('chain-selector-current-name').textContent = chainInfo.name;
+            document.getElementById('send-view-title').textContent = `Send ${chainInfo.symbol}`;
+
+            // Update chain dropdown active state
+            document.querySelectorAll('.chain-option').forEach(opt => {
+                opt.classList.toggle('active', parseInt(opt.dataset.chainId) === chainId);
+            });
+        }
+
+        async function switchChain(chainId) {
+            if (!account || !publicClient) return;
+            const selectedChain = chains[chainId]?.object;
+            if (!selectedChain || selectedChain.id === currentChain.id) return;
+
+            const balanceContainer = document.getElementById('balance-container');
+            showSpinner(balanceContainer);
+            document.getElementById('chain-selector-current-name').textContent = 'Switching...';
+
+            currentChain = selectedChain;
+            publicClient = createPublicClient({ chain: currentChain, transport: http() });
+            walletClient = createWalletClient({ account, chain: currentChain, transport: http() });
+
+            updateChainUI(chainId);
+            await fetchNativeCurrencyPrice();
+            await updateBalance();
+            gasFeeContainer.classList.add('hidden');
+        }
+
+        async function activateWallet(pk, chain = mainnet) {
+            try {
+                const finalPk = sanitizePrivateKey(pk);
+                account = privateKeyToAccount(finalPk);
+                currentChain = chain;
+                publicClient = createPublicClient({ chain: currentChain, transport: http() });
+                walletClient = createWalletClient({ account, chain: currentChain, transport: http() });
+
+                document.getElementById('address-container').textContent = account.address;
+                updateChainUI(currentChain.id);
+                showView('wallet');
+                await fetchNativeCurrencyPrice();
+                await updateBalance();
+                return true;
+            } catch (e) {
+                console.error(e);
+                showToast('Invalid Private Key.', 'error');
+                return false;
+            }
+        }
+
+        async function handlePkUnlock(event) {
+            event.preventDefault();
+            const pk = document.getElementById('private-key').value;
+            const remember = document.getElementById('remember-me').checked;
+            if (!pk) return;
+
+            try {
+                // Quick validation of PK format
+                privateKeyToAccount(sanitizePrivateKey(pk));
+            } catch (e) {
+                return showToast('Invalid Private Key format.', 'error');
+            }
+
+            if (remember) {
+                try {
+                    const password = await promptForPassword();
+                    const saveSuccess = await encryptAndSaveKey(pk, password);
+                    if (saveSuccess) {
+                        showToast("Wallet saved and encrypted!", "success");
+                        await activateWallet(pk);
+                    } else {
+                        showToast("Could not save key.", "error");
+                        await activateWallet(pk); // Activate for session even if save fails
+                    }
+                } catch (error) { // Catches cancellation from prompt
+                    showToast("Session only. Wallet not saved.", "info");
+                    await activateWallet(pk);
+                }
+            } else {
+                await activateWallet(pk);
+            }
+        }
+
+        async function handlePasswordUnlock(event) {
+            event.preventDefault();
+            const password = document.getElementById('password').value;
+            if (!password) return;
+
+            const pk = await loadAndDecryptKey(password);
+            if (pk) {
+                await activateWallet(pk);
+            } else {
+                showToast('Incorrect password or corrupted data.', 'error');
+            }
+        }
+
+        function handleLock() {
+            account = publicClient = walletClient = null;
+            ['private-key', 'password', 'recipient-address', 'send-amount'].forEach(id => document.getElementById(id).value = '');
+            gasFeeContainer.classList.add('hidden');
+            checkForSavedWallet();
+        }
+
+        function handleForgetWallet() {
+            if (confirm("Are you sure you want to forget this wallet? You will need to enter your full private key next time.")) {
+                localStorage.removeItem(storageKey);
+                handleLock();
+            }
+        }
+
+        // --- SEND & CONFIRM LOGIC ---
+        let debounceTimer;
+        async function estimateGasFee() {
+            const recipient = document.getElementById('recipient-address').value;
+            if (!isAddress(recipient) || !account) {
+                gasFeeContainer.classList.add('hidden');
+                return;
+            }
+
+            gasFeeContainer.classList.remove('hidden');
+            gasFeeContainer.innerHTML = `<span class="summary-label">Network Fee</span><div class="shimmer"></div>`;
+
+
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(async () => {
+                try {
+                    const value = parseEther(document.getElementById('send-amount').value || '0');
+
+                    await fetchNativeCurrencyPrice();
+
+                    const gas = await publicClient.estimateGas({
+                        to: recipient,
+                        value: value,
+                        account
+                    });
+                    const gasPrice = await publicClient.getGasPrice();
+                    const fee = gas * gasPrice;
+
+                    currentGasEstimate = {
+                        gas,
+                        gasPrice,
+                        fee,
+                        feeUsd: (parseFloat(formatEther(fee)) * nativePrice).toFixed(2)
+                    };
+
+                    gasFeeContainer.innerHTML = `
+                        <span class="summary-label">Network Fee</span>
+                        <span class="summary-value">${formatEthValue(fee, 6)} ${chains[currentChain.id].symbol} <div class="summary-value-sub">$${currentGasEstimate.feeUsd}</div></span>`;
+                } catch (e) {
+                    console.error("Gas estimation failed:", e);
+                    currentGasEstimate = { fee: 0n, gas: 0n, gasPrice: 0n, feeUsd: '0.00' };
+                    gasFeeContainer.innerHTML = `<span class="summary-label">Network Fee</span> <span style="color:var(--error-color); font-size:0.8rem; font-family:var(--font-family);">Unavailable</span>`;
+                }
+            }, 400);
+        }
+
+        async function handlePrepareSend() {
+            const recipient = document.getElementById('recipient-address').value;
+            const amountStr = document.getElementById('send-amount').value;
+            if (!isAddress(recipient)) return showToast('Invalid recipient address.', 'error');
+            if (!amountStr || isNaN(parseFloat(amountStr)) || parseFloat(amountStr) <= 0) return showToast('Invalid amount.', 'error');
+
+            if (currentGasEstimate.fee === 0n) {
+                return showToast("Network fee is not available. Please wait.", "error");
+            }
+
+            const amount = parseEther(amountStr);
+            if (amount + currentGasEstimate.fee > account.balance) return showToast("Insufficient funds for transaction.", "error");
+
+            transactionDetails = { recipient, amount, fee: currentGasEstimate.fee };
+            const amountInNative = formatEther(amount);
+            const totalInNative = formatEther(amount + transactionDetails.fee);
+            const totalUsd = (parseFloat(totalInNative) * nativePrice).toFixed(2);
+            const symbol = chains[currentChain.id].symbol;
+
+            document.getElementById('confirm-recipient').textContent = `${recipient.slice(0, 6)}...${recipient.slice(-4)}`;
+            document.getElementById('confirm-amount').innerHTML = `${formatEthValue(amount)} ${symbol} <div class="summary-value-sub">$${(parseFloat(amountInNative) * nativePrice).toFixed(2)}</div>`;
+            document.getElementById('confirm-fee').innerHTML = `${formatEthValue(transactionDetails.fee, 6)} ${symbol} <div class="summary-value-sub">$${currentGasEstimate.feeUsd}</div>`;
+            document.getElementById('confirm-total').innerHTML = `${formatEthValue(amount + transactionDetails.fee, 5)} ${symbol} <div class="summary-value-sub">$${totalUsd}</div>`;
+
+            showView('confirm');
+        }
+
+        async function executeTransaction() {
+            const button = document.getElementById('confirm-send-btn');
+            button.disabled = true;
+            button.innerHTML = '<div class="spinner"></div>Sending...';
+
+            try {
+                const hash = await walletClient.sendTransaction({
+                    to: transactionDetails.recipient,
+                    value: transactionDetails.amount
+                });
+                showToast('Transaction sent successfully!');
+                showView('wallet');
+                setTimeout(updateBalance, 3000); // Give RPC time to update
+            } catch (e) {
+                const errorMessage = (e instanceof BaseError && e.shortMessage) ? e.shortMessage : 'Transaction failed.';
+                showToast(errorMessage.charAt(0).toUpperCase() + errorMessage.slice(1), 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = 'Confirm & Send';
+                ['recipient-address', 'send-amount'].forEach(id => document.getElementById(id).value = '');
+                gasFeeContainer.classList.add('hidden');
+            }
+        }
+
+        function limitInputDecimals(event) {
+            const { value } = event.target;
+            const decimalPart = value.split('.')[1];
+            if (decimalPart && decimalPart.length > 5) {
+                event.target.value = parseFloat(value).toFixed(5);
+            }
+        }
+
+        async function handleMaxAmount() {
+            if (!account || !account.balance) {
+                return showToast("Connect wallet and wait for balance to load.", "info");
+            }
+            if (account.balance === 0n) {
+                return showToast("You have no balance to send.", "info");
+            }
+
+            const recipient = document.getElementById('recipient-address').value;
+            if (!isAddress(recipient)) {
+                return showToast("Please enter a valid recipient address first.", "info");
+            }
+
+            const button = document.getElementById('max-button');
+            button.disabled = true;
+            button.textContent = '...';
+
+            try {
+                const gas = await publicClient.estimateGas({
+                    to: recipient,
+                    account: account
+                });
+                const gasPrice = await publicClient.getGasPrice();
+                const fee = gas * gasPrice;
+
+                if (account.balance <= fee) {
+                    document.getElementById('send-amount').value = '0';
+                    showToast("Insufficient balance to cover the network fee.", "error");
+                } else {
+                    const maxAmount = account.balance - fee;
+                    document.getElementById('send-amount').value = formatEthValue(maxAmount);
+                    estimateGasFee();
+                }
+            } catch (error) {
+                console.error("Error calculating max amount:", error);
+                showToast("Could not calculate network fee.", "error");
+                gasFeeContainer.classList.remove('hidden');
+                gasFeeContainer.innerHTML = `<span class="summary-label">Network Fee</span> <span style="color:var(--error-color); font-size:0.8rem; font-family:var(--font-family);">Unavailable</span>`;
+
+            } finally {
+                button.disabled = false;
+                button.textContent = 'MAX';
+            }
+        }
+
+        // --- INITIALIZATION ---
+        function initializeChainSelector() {
+            chainDropdown.innerHTML = '';
+            Object.values(chains).forEach(chain => {
+                const li = document.createElement('li');
+                li.className = 'chain-option';
+                li.textContent = chain.name;
+                li.dataset.chainId = chain.object.id;
+                if (chain.object.id === currentChain.id) {
+                    li.classList.add('active');
+                }
+                li.addEventListener('click', () => {
+                    switchChain(chain.object.id);
+                    chainDropdown.classList.add('hidden');
+                    document.getElementById('chain-selector-btn').classList.remove('open');
+                });
+                chainDropdown.appendChild(li);
+            });
+        }
+
+        function checkForSavedWallet() {
+            const savedData = JSON.parse(localStorage.getItem(storageKey));
+            if (savedData && savedData.address) {
+                document.getElementById('saved-address-display').textContent = `${savedData.address.slice(0, 6)}...${savedData.address.slice(-4)}`;
+                document.getElementById('pk-unlock-view').querySelector('#use-saved-wallet-btn').classList.remove('hidden');
+                showView('passwordUnlock');
+            } else {
+                document.getElementById('pk-unlock-view').querySelector('#use-saved-wallet-btn').classList.add('hidden');
+                showView('pkUnlock');
+            }
+        }
+
+        // --- EVENT LISTENERS ---
+        document.getElementById('pk-unlock-form').addEventListener('submit', handlePkUnlock);
+        document.getElementById('password-unlock-form').addEventListener('submit', handlePasswordUnlock);
+        document.getElementById('use-saved-wallet-btn').addEventListener('click', () => showView('passwordUnlock'));
+        document.getElementById('lock-button').addEventListener('click', handleLock);
+        document.getElementById('forget-wallet-btn').addEventListener('click', handleForgetWallet);
+        document.getElementById('recipient-address').addEventListener('input', estimateGasFee);
+        document.getElementById('send-amount').addEventListener('input', (e) => {
+            limitInputDecimals(e);
+            estimateGasFee();
+        });
+        document.getElementById('max-button').addEventListener('click', handleMaxAmount);
+        document.getElementById('send-view-button').addEventListener('click', () => { showView('send'); estimateGasFee(); });
+        document.getElementById('back-to-wallet-btn').addEventListener('click', () => showView('wallet'));
+        document.getElementById('prepare-send-btn').addEventListener('click', handlePrepareSend);
+        document.getElementById('cancel-send-btn').addEventListener('click', () => showView('send'));
+        document.getElementById('confirm-send-btn').addEventListener('click', executeTransaction);
+        document.getElementById('receive-button').addEventListener('click', showReceiveModal);
+        document.getElementById('close-modal-button').addEventListener('click', hideReceiveModal);
+        receiveModal.addEventListener('click', (event) => { if (event.target === receiveModal) hideReceiveModal(); });
+        document.getElementById('address-container').addEventListener('click', (e) => copyToClipboard(e.currentTarget, account.address));
+        document.getElementById('receive-address').addEventListener('click', (e) => copyToClipboard(e.currentTarget, account.address));
+
+        // Chain Selector Events
+        const chainSelectorBtn = document.getElementById('chain-selector-btn');
+        chainSelectorBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            chainDropdown.classList.toggle('hidden');
+            chainSelectorBtn.classList.toggle('open');
+        });
+        document.addEventListener('click', () => {
+            chainDropdown.classList.add('hidden');
+            chainSelectorBtn.classList.remove('open');
+        });
+
+        // Start the app
+        initializeChainSelector();
+        checkForSavedWallet();
+    </script>
+
+</body>
+
+</html>

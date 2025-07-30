@@ -1,0 +1,96 @@
+{
+  "settings": {
+    "defaultLanguage": "uk",
+    "welcomeScreen": {
+      "enabled": true,
+      "duration": 4000
+    },
+    "wallpapers": {
+      "loading": "https://placehold.co/1920x1080/000000/FFFFFF?text=ЗАВАНТАЖЕННЯ...",
+      "default": "wall.png"
+    },
+    "folderGeneration": {
+      "enabled": true,
+      "targetPath": ["PC", "C_DRIVE", "Users", "Admin", "Desktop", "Квест для тебе"],
+      "count": 1000
+    }
+  },
+  "localization": {
+    "en": {
+      "systemNames": { "PC": "This PC", "C_DRIVE": "Local Disk (C:)", "D_DRIVE": "Local Disk (D:)", "Users": "Users", "Admin": "Yaroslav", "Desktop": "Desktop", "Documents": "Documents", "Downloads": "Downloads", "ProgramFiles": "Program Files", "Windows": "Windows", "Квест для тебе": "Quest for you" },
+      "welcomeText": "happy b-day", "startMenuTitle": "Pinned", "startSettings": "Settings", "startShutdown": "Shutdown", "startExplorer": "File Explorer", "notepadTitleSuffix": "- Notepad", "addressSeparator": ">", "settingsWindowTitle": "Settings", "themeLabel": "Window Theme:", "themeLight": "Light", "themeDark": "Dark", "shutdownConfirm": "Are you sure you want to close the quest?", "imagePreview": "Image Preview", "folderNameTemplate": "Folder {}"
+    },
+    "uk": {
+      "systemNames": {
+"PC": "Цей комп'ютер", "C_DRIVE": "Локальний диск (C:)", "D_DRIVE": "Локальний диск (D:)", "Users": "Користувачі", "Admin": "Admin", "Desktop": "Робочий стіл", "Documents": "Документи", "Downloads": "Завантаження", "ProgramFiles": "Program Files", "Windows": "Windows", "Квест для тебе": "Квест для тебе", "Диплом": "Диплом", "Презентація": "Презентація", "Версія 1 (чернетка)": "Версія 1 (чернетка)", "Версія 2 (майже фінал)": "Версія 2 (майже фінал)", "Версія 3 (ТОЧНО фінал)": "Версія 3 (ТОЧНО фінал)", "Остаточний_Варіант_КЛЯНУСЬ": "Остаточний_Варіант_КЛЯНУСЬ", "Джерела": "Джерела", "Шаблон": "Шаблон", "Не_тут": "Не_тут",
+    "НЕ_ЗАХОДИ": "НЕ_ЗАХОДИ", "Я_СЕРЙОЗНО": "Я_СЕРЙОЗНО", "ТУТ_ПУСТО": "ТУТ_ПУСТО", "НЕЧИСТА_СИЛА": "НЕЧИСТА_СИЛА", "Я_ЗНАЮ_ДЕ_ТИ": "Я_ЗНАЮ_ДЕ_ТИ", "Я_Ж_КАЗАВ_НЕ_ЗАХОДИТИ": "Я_Ж_КАЗАВ_НЕ_ЗАХОДИТИ", "ТИ_СЕРЙОЗНО": "ТИ_СЕРЙОЗНО", "НУ_ОК": "НУ_ОК",
+    "ПОЧАТОК": "ПОЧАТОК", "ЗАХОДЬ_СЮДИ": "ЗАХОДЬ_СЮДИ", "КРОК_ДРУГИЙ": "КРОК_ДРУГИЙ", "ПІДКАЗКА_ТУТ": "ПІДКАЗКА_ТУТ", "МАТЕМАТИКА": "МАТЕМАТИКА", "РАХУЙ": "РАХУЙ", "ДЗЕРКАЛО": "ДЗЕРКАЛО", "ТРИ_ОДИНИЦІ": "ТРИ_ОДИНИЦІ", "САМАКАТИСТУ": "САМАКАТИСТУ", "ДИПЛОМНА_РОБОТА": "ДИПЛОМНА_РОБОТА", "ПІСЛЯ_ВІДЕО": "ПІСЛЯ_ВІДЕО", "ПРАВИЛЬНИЙ_ШЛЯХ": "ПРАВИЛЬНИЙ_ШЛЯХ", "ЖИГАБИГУЛЕ": "ЖИГАБИГУЛЕ", "ШВИДКІСТЬ": "ШВИДКІСТЬ", "NOT_FOUND": "NOT_FOUND", "ЗНАЙШОВСЯ": "ЗНАЙШОВСЯ", "БЕЗКІНЕЧНІСТЬ": "БЕЗКІНЕЧНІСТЬ", "АЛЕ_НЕ_ЗОВСІМ": "АЛЕ_НЕ_ЗОВСІМ", "ПЕРЕД_ГРОЮ": "ПЕРЕД_ГРОЮ", "РОЗМИНКА": "РОЗМИНКА", "ПІСЛЯ_ГРИ": "ПІСЛЯ_ГРИ", "ІСТОРИЧНИЙ_ЕКСКУРС": "ІСТОРИЧНИЙ_ЕКСКУРС", "КОЛУМБ": "КОЛУМБ", "А_ТЕПЕР_МАТЕМАТИКА": "А_ТЕПЕР_МАТЕМАТИКА", "ДВІЙКОВИЙ_КОД": "ДВІЙКОВИЙ_КОД", "ПОТУЖНІСТЬ": "ПОТУЖНІСТЬ", "ПРОФІ_ЛЕВЕЛ": "ПРОФІ_ЛЕВЕЛ", "ГОТУЙСЯ": "ГОТУЙСЯ", "ДЗЕРКАЛЬНА_ВІДПОВІДЬ": "ДЗЕРКАЛЬНА_ВІДПОВІДЬ", "КАЛІБР": "КАЛІБР", "БАБАХ": "БАБАХ", "ЙДЕМО_ДАЛІ": "ЙДЕМО_ДАЛІ", "СОТОЧКА": "СОТОЧКА", "МАЙЖЕ_ФІНІШ": "МАЙЖЕ_ФІНІШ", "ОСТАННІ_КРОКИ": "ОСТАННІ_КРОКИ", "НЕ_ЗДАВАЙСЯ": "НЕ_ЗДАВАЙСЯ", "ПОДИВИСЬ": "ПОДИВИСЬ", "У_ВІКНО": "У_ВІКНО", "НА_УДАЧУ": "НА_УДАЧУ", "ТРІЙНИЙ_УСПІХ": "ТРІЙНИЙ_УСПІХ", "ДЖЕКПОТ": "ДЖЕКПОТ", "ФІНАЛЬНИЙ_РИВОК": "ФІНАЛЬНИЙ_РИВОК", "ПЕРЕМОГА": "ПЕРЕМОГА", "Ти_це_зробив": "Ти_це_зробив"      
+  },
+      "welcomeText": "З ДН, МАЛЬЧИШКА!",
+      "startMenuTitle": "Закріплено", "startSettings": "Налаштування", "startShutdown": "Вимкнути", "startExplorer": "Провідник", "notepadTitleSuffix": "- Блокнот", "addressSeparator": ">", "settingsWindowTitle": "Налаштування", "themeLabel": "Тема вікон:", "themeLight": "Світла", "themeDark": "Темна", "shutdownConfirm": "Точно виходиш? Квест доведеться починати заново!", "imagePreview": "Перегляд зображення", "folderNameTemplate": "Папка {}"
+    }
+  },
+  "desktopItems": {
+    "questIcon": {
+      "name": "Квест для тебе",
+      "type": "folder",
+      "iconSVG": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M40 8H24l-4-4H8c-2.21 0-3.98 1.79-3.98 4L4 36c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4z' fill='#FFC107'/><path d='M24.5 34h-1c-2.2 0-4-1.8-4-4s1.8-4 4-4h1c2.2 0 4 1.8 4 4s-1.8 4-4 4zm-1-6c-1.1 0-2 .9-2 2s.9 2 2 2h1c1.1 0 2-.9 2-2s-.9-2-2-2h-1zm9-2c-1.3 0-2.4-.8-2.8-2h-11c-.5 1.2-1.6 2-2.8 2-1.7 0-3-1.3-3-3s1.3-3 3-3c.8 0 1.5.3 2 .8h12.2c.5-.5 1.2-.8 2-.8 1.7 0 3 1.3 3 3s-1.3 3-3 3z' fill='#212121' fill-opacity='.7'/></svg>",
+      "targetPath": ["PC", "C_DRIVE", "Users", "Admin", "Desktop", "Квест для тебе"]
+    }
+  },
+  "fileSystem": {
+    "PC": { "children": { "C_DRIVE": { "children": { "Users": { "children": { "Admin": { "children": {
+      "Desktop": { "children": {"Квест для тебе": { "type": "folder", "children": {
+    "Папка 1": { "type": "folder", "children": { "ПОЧАТОК": { "type": "folder", "children": { "ЗАХОДЬ_СЮДИ": { "type": "folder", "children": { "start.txt": { "type": "file", "content": "Йоу, мальчишка. Починаєм.\n\nНаступна папка = 900 - 54. Не тупи." } } } } } } },
+    "Папка 846": { "type": "folder", "children": { "КРОК_ДРУГИЙ": { "type": "folder", "children": { "ПІДКАЗКА_ТУТ": { "type": "folder", "children": { "clue2.txt": { "type": "file", "content": "Норм йдеш. Тепер шукай папку, номер якої = 9 * 7." } } } } } } },
+    "Папка 63": { "type": "folder", "children": { "МАТЕМАТИКА": { "type": "folder", "children": { "РАХУЙ": { "type": "folder", "children": { "clue3.txt": { "type": "file", "content": "Типу розумний? Ок. Йди в папку з номером 500 + 200 + 20 + 5." } } } } } } },
+    "Папка 725": { "type": "folder", "children": { "НЕ_ЗАХОДИ": { "type": "folder", "children": { "Я_СЕРЙОЗНО": { "type": "folder", "children": { "ТУТ_ПУСТО": { "type": "folder", "children": { "clue4.txt": { "type": "file", "content": "Я ж казав не заходити, шо ти голова.\n\nАле раз зайшов, то наступна папка `111`." } } } } } } } } },
+    "Папка 111": { "type": "folder", "children": { "ДЗЕРКАЛО": { "type": "folder", "children": { "ТРИ_ОДИНИЦІ": { "type": "folder", "children": { "clue5.txt": { "type": "file", "content": "Так, шось легко. Давай так: іди в папку, де перша цифра 9, остання 9, а посередині... нічого :) " } } } } } } },
+    "Папка 99": { "type": "folder", "children": { "САМАКАТИСТУ": { "type": "folder", "children": { "ДИПЛОМНА_РОБОТА": { "type": "folder", "children": { "clue6.txt": { "type": "file", "content": "Ти ж у нас самакатист крутий, диплом захистив.\n\nАну, покажи-но свою роботу. Йди в папку `Завантаження` (вона на рівень вище Робочого столу), там знайдеш свій `Диплом`." } } } } } } },
+    "Папка 379": { "type": "folder", "children": { "ПІСЛЯ_ВІДЕО": { "type": "folder", "children": { "ПРАВИЛЬНИЙ_ШЛЯХ": { "type": "folder", "children": { "clue8.txt": { "type": "file", "content": "Йдемо далі. 2^10 - 1000." } } } } } } },
+    "Папка 24": { "type": "folder", "children": { "ЖИГАБИГУЛЕ": { "type": "folder", "children": { "ШВИДКІСТЬ": { "type": "folder", "children": { "clue9.txt": { "type": "file", "content": "Ти як той жигабигуле на самакаті, такий же швидкий. Наступна зупинка: `Папка 666`." } } } } } } },
+    "Папка 666": { "type": "folder", "children": { "НЕЧИСТА_СИЛА": { "type": "folder", "children": { "clue10.txt": { "type": "file", "content": "Освячую тебе на подальший шлях! Наступна папка `404`." } } } } },
+    "Папка 404": { "type": "folder", "children": { "NOT_FOUND": { "type": "folder", "children": { "ЗНАЙШОВСЯ": { "type": "folder", "children": { "clue11.txt": { "type": "file", "content": "Папку не знайдено! Жартую. Ось вона. Наступна `Папка 888`." } } } } } } },
+    "Папка 888": { "type": "folder", "children": { "БЕЗКІНЕЧНІСТЬ": { "type": "folder", "children": { "АЛЕ_НЕ_ЗОВСІМ": { "type": "folder", "children": { "clue12.txt": { "type": "file", "content": "Символ безкінечності... але квест не безкінечний. Йди в `Папку 5`." } } } } } } },
+    "Папка 5": { "type": "folder", "children": { "ПЕРЕД_ГРОЮ": { "type": "folder", "children": { "РОЗМИНКА": { "type": "folder", "children": { "clue13.txt": { "type": "file", "content": "Час пограти в ігру. Відпочинь трохи. `Папка 14` чекає." } } } } } } },
+    "Папка 14": { "type": "folder", "children": { "readme.txt": { "type": "file", "content": "Пройди гру, щоб отримати підказку. Якщо ти затупив, є файл-підказка." },"game.html": { "type": "game", "src": "game.html" },"game_hint.txt": { "type": "file", "content": "Окей, якщо ти затупив з грою, ось підказка: 7-7-8." } } },
+    "Папка 778": { "type": "folder", "children": { "ПІСЛЯ_ГРИ": { "type": "folder", "children": { "ІСТОРИЧНИЙ_ЕКСКУРС": { "type": "folder", "children": { "clue15.txt": { "type": "file", "content": "Ну шо, геймер? Погнали далі. Наступна папка - рік, коли Колумб відкрив Америку, мінус 1000." } } } } } } },
+    "Папка 492": { "type": "folder", "children": { "КОЛУМБ": { "type": "folder", "children": { "А_ТЕПЕР_МАТЕМАТИКА": { "type": "folder", "children": { "clue16.txt": { "type": "file", "content": "Добре знаєш історію. А математику? 100 * 5 - 50 + 1" } } } } } } },
+    "Папка 451": { "type": "folder", "children": { "Я_ЗНАЮ_ДЕ_ТИ": { "type": "folder", "children": { "clue17.txt": { "type": "file", "content": "Я слідкую за тобою... Йди в `Папку 256`." } } } } },
+    "Папка 256": { "type": "folder", "children": { "ДВІЙКОВИЙ_КОД": { "type": "folder", "children": { "ПОТУЖНІСТЬ": { "type": "folder", "children": { "clue18.txt": { "type": "file", "content": "Це степінь двійки. Наступна папка теж. Але вдвічі більша." } } } } } } },
+    "Папка 512": { "type": "folder", "children": { "ПРОФІ_ЛЕВЕЛ": { "type": "folder", "children": { "ГОТУЙСЯ": { "type": "folder", "children": { "clue19.txt": { "type": "file", "content": "Ти майже профі. Але зараз буде складно. Готуйся. Папка `123`." } } } } } } },
+    "Папка 123": { "type": "folder", "children": { "puzzle.txt": { "type": "file", "content": "Шо ти голова, запутався? Бачу по твоєму лицю на `eee.png`.\n\nНе гони дуру. Номер наступної папки це дзеркальне відображення номера поточної папки." },"eee.png": { "type": "image", "src": "eee.png" } } },
+    "Папка 321": { "type": "folder", "children": { "ДЗЕРКАЛЬНА_ВІДПОВІДЬ": { "type": "folder", "children": { "КАЛІБР": { "type": "folder", "children": { "clue21.txt": { "type": "file", "content": "Розгадав! Красава. Наступна папка - улюблений калібр." } } } } } } },
+    "Папка 762": { "type": "folder", "children": { "БАБАХ": { "type": "folder", "children": { "ЙДЕМО_ДАЛІ": { "type": "folder", "children": { "clue22.txt": { "type": "file", "content": "Ба-бах! І ти йдеш далі. В `Папку 13`." } } } } } } },
+    "Папка 13": { "type": "folder", "children": { "Я_Ж_КАЗАВ_НЕ_ЗАХОДИТИ": { "type": "folder", "children": { "ТИ_СЕРЙОЗНО": { "type": "folder", "children": { "НУ_ОК": { "type": "folder", "children": { "clue23.txt": { "type": "file", "content": "Ти дуже впертий самакатист. Добре. `Папка 100`." } } } } } } } } },
+    "Папка 100": { "type": "folder", "children": { "СОТОЧКА": { "type": "folder", "children": { "МАЙЖЕ_ФІНІШ": { "type": "folder", "children": { "clue24.txt": { "type": "file", "content": "Майже фініш. Відчуваєш? Йди в `Папку 999`." } } } } } } },
+    "Папка 999": { "type": "folder", "children": { "false_hope.txt": { "type": "file", "content": "ЄЄЄЄ, ЖИГАБИГУЛЕ! ТИ ЦЕ ЗРОБИВ! ТИ ПЕРЕМІГ!\n\n...\n\nАхахах, та нє, не гони дуру, це ще не кінець. Розслабився? Ану зібрався! Шуруй в папку номер 10." }, "almost_winner.png": { "type": "image", "src": "almost_winner.png" } } },
+    "Папка 10": { "type": "folder", "children": { "ОСТАННІ_КРОКИ": { "type": "folder", "children": { "НЕ_ЗДАВАЙСЯ": { "type": "folder", "children": { "clue26.txt": { "type": "file", "content": "Ще трошки. `Папка 299`." } } } } } } },
+    "Папка 299": { "type": "folder", "children": { "ПОДИВИСЬ": { "type": "folder", "children": { "У_ВІКНО": { "type": "folder", "children": { "clue27.txt": { "type": "file", "content": "Подивись у вікно. Бачиш? Отож. `Папка 555`." } } } } } } },
+    "Папка 555": { "type": "folder", "children": { "НА_УДАЧУ": { "type": "folder", "children": { "ТРІЙНИЙ_УСПІХ": { "type": "folder", "children": { "clue28.txt": { "type": "file", "content": "Три п'ятірки на удачу. Вона тобі знадобиться. `Папка 777`." } } } } } } },
+    "Папка 777": { "type": "folder", "children": { "ДЖЕКПОТ": { "type": "folder", "children": { "ФІНАЛЬНИЙ_РИВОК": { "type": "folder", "children": { "clue29.txt": { "type": "file", "content": "ДЖЕКПОТ! Останній ривок, мальчишка! ФІНАЛЬНА ПАПКА ЧЕКАЄ НА ТЕБЕ! Це `Папка 77`." } } } } } } },
+    "Папка 77": { "type": "folder", "children": { "ПЕРЕМОГА": { "type": "folder", "children": { "Ти_це_зробив": { "type": "folder", "children": { "FINAL.txt": { "type": "file", "content": "ВУУУХУУУУ! ТИ ПРОЙШОВ ЦЕЙ ШЛЯХ! ТИ РЕАЛЬНО КРАЩИЙ!\n\nТепер фінальне завдання. Заходиш в телеграм і пишеш боту `@YaroWalletBot`. Він знає, що робити далі." } } } } } } }
+} }}
+      },
+      "Documents": { "children": {
+        "WallApp": { "type": "folder", "children": {
+          "wallapp.html": { "type": "iframe", "src": "wallapp.html" }
+        } }
+      } },
+      "Downloads": { "children": {
+        "Диплом": { "type": "folder", "children": {
+          "README_IMPORTANT.txt": { "type": "file", "content": "Тут мав бути диплом, але щось пішло не так. Шукай в версіях, може десь є." },
+          "Джерела": { "type": "folder", "children": { "література.txt": { "type": "file", "content": "Список використаної літератури:\n1. Google.com\n2. Wikipedia.org\n3. Мамина подруга" } } },
+          "Версія 1 (чернетка)": { "type": "folder", "children": { "план.txt": { "type": "file", "content": "План:\n1. Почати диплом.\n2. ...\n3. Захиститись і піти святкувати." }, "розділ1.txt": { "type": "file", "content": "Написав два речення, втомився. Треба відпочити." } } },
+          "Версія 2 (майже фінал)": { "type": "folder", "children": { "висновки.txt": { "type": "file", "content": "Висновки: треба було починати раніше і менше грати в ігри." } } },
+          "Версія 3 (ТОЧНО фінал)": { "type": "folder", "children": {
+            "Презентація": { "type": "folder", "children": {
+              "Шаблон": { "type": "folder", "children": { "design_v1.txt": { "type": "file", "content": "Тут мав бути дизайн, але я не дизайнер." } } },
+              "Остаточний_Варіант_КЛЯНУСЬ": { "type": "folder", "children": {
+                "Не_тут": { "type": "folder", "children": {
+                  "Mia_Khalifa.mp4": { "type": "video", "src": "Mia_Khalifa.mp4" },
+                  "clue7.txt": { "type": "file", "content": "`Mia_Khalifa.mp4` - це тіпа твоя презентація? ... =]\n\nЛадно, не гони дуру, включай презентацію." }
+                } } } } } } } }
+        } } } } }
+      } } } } } }
+}}}
