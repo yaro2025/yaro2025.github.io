@@ -14,7 +14,7 @@
             background-color: #1a1a1a;
         }
         .desktop {
-            background-image: url('https://placehold.co/1920x1080/000000/FFFFFF?text=🥳');
+            background-image: url('https://placehold.co/1920x1080/000000/FFFFFF?text=RUN BAC9 RUN');
             background-size: cover;
             background-position: center;
             height: 100vh;
@@ -256,38 +256,132 @@
     </div>
 
     <script>
-        // --- FILE SYSTEM ---
-        const questFolders = {};
-        const trollPath = {
-            'Не заходи сюда': { type: 'folder', children: {
-                'Серьезно, тут ничего нет': { type: 'folder', children: {
-                    'Подвязывай, мальчишка': { type: 'folder', children: {
-                        'Ох и чепуха': { type: 'folder', children: {
-                            'fun.png': { type: 'image', src: '/fun.png' },
-                            'hint.txt': { type: 'file', content: 'Начало игры в "Папка 42".' }
-                        }}
-                    }}
-                }}
-            }}
-        };
-
-        for (let i = 1; i <= 1000; i++) {
-            const folderName = `Папка ${i}`;
-            if (i <= 41) {
-                questFolders[folderName] = { type: 'folder', children: JSON.parse(JSON.stringify(trollPath)) };
-            } else if (i === 42) {
-                questFolders[folderName] = { type: 'folder', children: {
-                    'hint1.html': { type: 'game' }
-                }};
-            } else {
-                 questFolders[folderName] = { type: 'folder', children: {} };
-                 if (i === 1000) {
-                     questFolders[folderName].children['final_surprise.txt'] = { type: 'file', content: 'Поздравляю! Ты прошел квест! С Днем Рождения!' };
-                 }
+const fileSystem = {
+    'С Днюхой, голова!': {
+        type: 'folder',
+        children: {
+            'ЭЙ_ТЫ_СЮДА_СМОТРИ.txt': {
+                type: 'file',
+                content: 'Слышь, голова, с Днюхой тебя!\n\nЯ тут тебе квест замутил. Если пройдешь - ты машина. Если нет - ну, ты понял, чепуха.\n\nТвой квест начинается в "Папке 42". Не затупи.'
             }
         }
+    }
+};
 
-        const fileSystem = { 'с др': { type: 'folder', children: questFolders } };
+const questFolders = fileSystem['С Днюхой, голова!'].children;
+
+// Генерируем 1000 пустых папок
+for (let i = 1; i <= 1000; i++) {
+    questFolders[`Папка ${i}`] = { type: 'folder', children: {} };
+}
+
+// --- ОСНОВНОЙ КВЕСТ ---
+
+questFolders['Папка 42'] = { type: 'folder', children: { 'Давай, мальчишка, жми.txt': { type: 'file', content: 'Пройди игру, чтобы получить первую наводку.' }, 'hint1.html': { type: 'game' } } };
+questFolders['Папка 77'] = { type: 'folder', children: { 'Уже здесь? Быстро.txt': { type: 'file', content: 'Вторая игра. Не расслабляйся.' }, 'hint2.html': { type: 'game' } } };
+questFolders['Папка 555'] = { type: 'folder', children: { 'Полпути пройдено, голова.txt': { type: 'file', content: 'Третья проверка на прочность.' }, 'hint3.html': { type: 'game' } } };
+questFolders['Папка 86'] = { type: 'folder', children: { 'Ты еще не устал, самокатист?.txt': { type: 'file', content: 'Давай, еще рывок.' }, 'hint4.html': { type: 'game' } } };
+questFolders['Папка 199'] = { type: 'folder', children: { 'ФИНАЛОЧКА.txt': { type: 'file', content: 'Последняя игра. Если пройдешь, скажу, где приз.' }, 'hint5.html': { type: 'game' } } };
+
+// --- ФИНАЛ ---
+questFolders['Папка 34'] = {
+    type: 'folder',
+    children: {
+        'ТЫ_ЛЕГЕНДА.txt': {
+            type: 'file',
+            content: 'ААААА, ТЫ СДЕЛАЛ ЭТО!\n\nТы не чепуха, ты НАСТОЯЩАЯ ГОЛОВА! Прошел все испытания, не загнался и нашел финал.\n\nС ДНЕМ РОЖДЕНИЯ, МАШИНА!\n\nТвой подарок ждет тебя [укажи, где реальный подарок]. Жигабигуле!'
+        },
+        'победитель.png': { type: 'image', src: '/победитель.png' }
+    }
+};
+
+// --- ЛОВУШКИ И ГЛУБОКИЕ ПРИКОЛЫ ---
+
+// Путь "самокатиста" (глубокая вложенность)
+questFolders['Папка 1'] = {
+    type: 'folder',
+    children: {
+        'Сюда только умным': {
+            type: 'folder',
+            children: {
+                'Ты точно умный': {
+                    type: 'folder',
+                    children: {
+                        'Проверим': {
+                            type: 'folder',
+                            children: {
+                                'Последний шанс свернуть': {
+                                    type: 'folder',
+                                    children: {
+                                        'Ну ты и упертый': {
+                                            type: 'folder',
+                                            children: {
+                                                'fun.png': { type: 'image', src: '/fun.png' },
+                                                'вердикт.txt': { type: 'file', content: 'Вердикт: типичный самокатист. Разворачивайся, голова, и ищи подсказки, а не лезь напролом.' }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+};
+
+// Ловушка "Глупый чтоль?"
+questFolders['Папка 404'] = {
+    type: 'folder',
+    children: {
+        'Папка_не_найдена_А_НЕТ_НАЙДЕНА': {
+            type: 'folder',
+            children: {
+                'Раз ты ее нашел, то зайди': {
+                    type: 'folder',
+                    children: {
+                        'И сюда зайди': {
+                            type: 'folder',
+                            children: {
+                                'удивление.png': { type: 'image', src: '/удивление.png' },
+                                'ты_кто.txt': { type: 'file', content: 'Ты как сюда вообще попал? Глупый чтоль? Тут тупик, говорю тебе.' }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+};
+
+// Ловушка "Почти победа"
+questFolders['Папка 999'] = {
+    type: 'folder',
+    children: {
+        'Финишная прямая': {
+            type: 'folder',
+            children: {
+                'Ты почти дошел': {
+                    type: 'folder',
+                    children: {
+                        'полупобедитель.png': { type: 'image', src: '/полупобедитель.png' },
+                        'облом.txt': { type: 'file', content: 'Шо ты, машина, так быстро сюда долетел? Жаль, что это ловушка для таких торопыг. Не гони дуру, это не та папка!' }
+                    }
+                }
+            }
+        }
+    }
+};
+
+// Другие приколы
+questFolders['Папка 777'] = { type: 'folder', children: { 'ДЖЕКПОТ': { type: 'folder', children: { 'НИЧЕГО.txt': { type: 'file', content: 'Жига-бигуле, опа, жига-жига-бигуле! Танцуй! Приза тут нет, погнали дальше, внук Жакуя.' } } } } };
+questFolders['Папка 228'] = { type: 'folder', children: { 'Не_гони_дуру.txt': { type: 'file', content: 'Сюда нельзя, мальчишка.' } } };
+questFolders['Папка 100'] = { type: 'folder', children: { 'Сотка.txt': { type: 'file', content: 'Круглое число. Красивое. Пустое.' } } };
+questFolders['Папка 500'] = { type: 'folder', children: { 'Экватор.txt': { type: 'file', content: 'Ты прошел половину папок. Скорее всего, бесполезных.' } } };
+questFolders['Папка 88'] = { type: 'folder', children: { 'Две_бесконечности.txt': { type: 'file', content: 'Символично. Бессмысленно.' } } };
+
+// console.log(JSON.stringify(fileSystem, null, 2));
 
         // --- DOM ELEMENTS ---
         const desktop = document.getElementById('desktop');
@@ -453,7 +547,7 @@
         window.onload = () => {
             setTimeout(() => {
                 wallpaperOverlay.classList.add('hidden');
-                desktop.style.backgroundImage = `url('wall.png'), url('https://placehold.co/1920x1080/3a6ea5/ffffff?text=🥳')`;
+                desktop.style.backgroundImage = `url('wall.png'), url('https://placehold.co/1920x1080/3a6ea5/ffffff?text=RUN BAC9 RUN')`;
             }, 5000);
         };
         updateClock();
