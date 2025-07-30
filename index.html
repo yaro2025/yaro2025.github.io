@@ -399,81 +399,10 @@
         
         function openGameWindow(fileName) {
             openWindow(gameWindow, gameWindowTitle, fileName);
-            const gameContent = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>3D Hint</title>
-                    <style>body{margin:0;overflow:hidden;background:#1a1a1a;color:white;font-family:sans-serif;text-align:center;}#info{position:absolute;top:10px;width:100%;}</style>
-                </head>
-                <body>
-                    <div id="info">Ответ в последней папке.<br/>(Вращай куб мышкой)</div>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></scr`+`ipt>
-                    <script>
-                        let scene, camera, renderer, cube;
-                        let isMouseDown = false, mouseX = 0, mouseY = 0;
-
-                        function init() {
-                            scene = new THREE.Scene();
-                            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-                            renderer = new THREE.WebGLRenderer({ antialias: true });
-                            renderer.setSize(window.innerWidth, window.innerHeight);
-                            document.body.appendChild(renderer.domElement);
-
-                            const geometry = new THREE.BoxGeometry(2, 2, 2);
-                            const material = new THREE.MeshStandardMaterial({ color: 0x0078d4, roughness: 0.5 });
-                            cube = new THREE.Mesh(geometry, material);
-                            scene.add(cube);
-
-                            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-                            scene.add(ambientLight);
-                            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-                            directionalLight.position.set(5, 10, 7.5);
-                            scene.add(directionalLight);
-
-                            camera.position.z = 5;
-
-                            document.addEventListener('mousedown', onMouseDown);
-                            document.addEventListener('mouseup', onMouseUp);
-                            document.addEventListener('mousemove', onMouseMove);
-                            window.addEventListener('resize', onWindowResize);
-                        }
-
-                        function onWindowResize() {
-                            camera.aspect = window.innerWidth / window.innerHeight;
-                            camera.updateProjectionMatrix();
-                            renderer.setSize(window.innerWidth, window.innerHeight);
-                        }
-                        
-                        function onMouseDown(event) { isMouseDown = true; }
-                        function onMouseUp(event) { isMouseDown = false; }
-                        function onMouseMove(event) {
-                            if (isMouseDown) {
-                                const deltaX = event.clientX - mouseX;
-                                const deltaY = event.clientY - mouseY;
-                                cube.rotation.y += deltaX * 0.01;
-                                cube.rotation.x += deltaY * 0.01;
-                            }
-                            mouseX = event.clientX;
-                            mouseY = event.clientY;
-                        }
-
-                        function animate() {
-                            requestAnimationFrame(animate);
-                            if (!isMouseDown) {
-                                cube.rotation.x += 0.005;
-                                cube.rotation.y += 0.005;
-                            }
-                            renderer.render(scene, camera);
-                        }
-
-                        init();
-                        animate();
-                    </scr`+`ipt>
-                </body>
-                </html>
-            `;
-            gameFrame.src = `data:text/html;charset=utf-8,${encodeURIComponent(gameContent)}`;
+            // This now points to a relative path. This will only work if a file
+            // named 'hint1.html' exists in the same directory as this main file,
+            // or if a server is configured to handle this route.
+            gameFrame.src = '/hint1.html';
         }
 
         function closeWindow(windowEl) { windowEl.classList.add('hidden'); }
